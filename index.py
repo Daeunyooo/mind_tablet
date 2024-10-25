@@ -499,7 +499,6 @@ def home():
                 </form>
                 <div class="canvas-container ">
                     <canvas id="drawingCanvas" width="500" height="330"></canvas>
-                    <button id="backButton" class="tool-button" onclick="undoLastAction()">Back</button>
                 </div>
                 <div class>
                     <div class="brush" style="background-color: #f44336;" onclick="changeColor('#f44336')"></div>
@@ -514,7 +513,7 @@ def home():
                     <div class="brush" style="background-color: black;" onclick="changeColor('black')"></div>
                 </div>
                 <div style="margin-top: 10px;">
-                    Brush size: <input type="range" id="strokeSizeSlider" min="10" max="30" value="2" style="width: 200px;" >
+                    Brush size: <input type="range" id="strokeSizeSlider" min="10" max="30" value="2" style="width: 150px;" >
                     <button id="brushButton" class="tool-button" onclick="selectTool('brush')">Brush</button>
                     <button id="eraserButton" class="tool-button" onclick="selectTool('eraser')">Eraser</button>
                     <button id="backButton" class="tool-button" onclick="undoLastAction()">Back</button> <!-- Move "Back" button here -->
