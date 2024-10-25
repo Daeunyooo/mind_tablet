@@ -574,12 +574,13 @@ def home():
                     let painting = false;
                     let undoStack = [];
                     let currentColor = '#000000'; // Default black
-
-                    // Save the current state of the canvas
+                    
+                    // Save the current state of the canvas for undo functionality
                     function saveCanvasState() {
                         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                         undoStack.push(imageData);
                     }
+
 
 
                     // Draw on the canvas with a mouse or touch
@@ -606,6 +607,9 @@ def home():
                         ctx.stroke();
                         ctx.beginPath();
                         ctx.moveTo(x, y);
+                    
+                        // Debugging: Log current drawing coordinates
+                        console.log(`Drawing at: (${x}, ${y})`);
                     }
                     
                     // Start painting with mouse down or touch start
@@ -613,13 +617,32 @@ def home():
                         event.preventDefault(); // Prevent scrolling when touching the canvas
                         painting = true;
                         saveCanvasState();
-                        draw(event);
+                    
+                        // Get the initial position to avoid jumping when starting to draw
+                        let x, y;
+                        if (event.touches) {
+                            const touch = event.touches[0];
+                            const rect = canvas.getBoundingClientRect();
+                            x = touch.clientX - rect.left;
+                            y = touch.clientY - rect.top;
+                        } else {
+                            x = event.offsetX;
+                            y = event.offsetY;
+                        }
+                    
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                    
+                        // Debugging: Log the start of painting
+                        console.log('Started painting at:', x, y);
                     }
                     
                     // Stop painting with mouse up or touch end
                     function stopPainting() {
                         painting = false;
                         ctx.beginPath();
+                        // Debugging: Log the end of painting
+                        console.log('Stopped painting');
                     }
                     
                     // Undo the last action
@@ -629,7 +652,7 @@ def home():
                             ctx.putImageData(lastState, 0, 0);
                         }
                     }
-
+                    
                     // Set the tool used for drawing
                     function selectTool(tool) {
                         if (tool === 'eraser') {
@@ -646,18 +669,20 @@ def home():
                     canvas.addEventListener('mousemove', draw);
                     canvas.addEventListener('mouseup', stopPainting);
                     canvas.addEventListener('mouseout', stopPainting);
-                
+                    
                     // Event listeners for touch interactions
                     canvas.addEventListener('touchstart', startPainting, { passive: false });
                     canvas.addEventListener('touchmove', draw, { passive: false });
                     canvas.addEventListener('touchend', stopPainting);
                     canvas.addEventListener('touchcancel', stopPainting);
-                
+                    
                     // Change color
                     function changeColor(color) {
                         currentColor = color;
                         ctx.strokeStyle = color;
+                        console.log('Changed color to:', color);
                     }
+
 
                     // Buttons for tool selection
                     document.getElementById('brushButton').addEventListener('click', function() { selectTool('brush'); });
@@ -665,7 +690,6 @@ def home():
                     document.getElementById('backButton').addEventListener('click', undoLastAction);
 
                     // Set initial color
-                    let currentColor = '#000000'; // Default black
                     ctx.strokeStyle = currentColor;
                     ctx.lineWidth = 5;
                 </script>
