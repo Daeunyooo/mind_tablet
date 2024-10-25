@@ -706,7 +706,7 @@ def home():
                             Please describe what you drew on the canvas! <br>
                         </label><br>
                         <input type="text" id="description" autocomplete="off" style="width: 400px; padding: 5px; margin-top: 10px;" placeholder="Describe your drawing..." />
-                        <input type="submit" value="Generate" class="button-style" />
+                        <input type="submit" value="Generate" class="button-style" style="margin-top: 20px;"/>
                     </form>
                     <!-- Loading indicator placed right below the form -->
                     <div id="loading" style="display: none; text-align: center;">
