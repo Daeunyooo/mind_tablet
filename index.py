@@ -581,50 +581,42 @@ def home():
                         undoStack.push(imageData);
                     }
 
-                    // Draw on the canvas
+
+                    // Draw on the canvas with a mouse or touch
                     function draw(event) {
                         if (!painting) return;
                         ctx.lineWidth = document.getElementById('strokeSizeSlider').value;
                         ctx.lineCap = 'round';
-                        ctx.lineTo(event.offsetX, event.offsetY);
-                        ctx.stroke();
-                        ctx.beginPath();
-                        ctx.moveTo(event.offsetX, event.offsetY);
-                    }
-                
-                    // Draw with touch
-                    function drawTouch(event) {
-                        event.preventDefault(); // Prevent screen scrolling
-                        if (!painting) return;
-                        const touch = event.touches[0];
-                        const rect = canvas.getBoundingClientRect();
-                        const x = touch.clientX - rect.left;
-                        const y = touch.clientY - rect.top;
-                
-                        ctx.lineWidth = document.getElementById('strokeSizeSlider').value;
-                        ctx.lineCap = 'round';
+                    
+                        // Determine the coordinates based on the input type
+                        let x, y;
+                        if (event.touches) {
+                            // If it's a touch event, get the position from the touch object
+                            const touch = event.touches[0];
+                            const rect = canvas.getBoundingClientRect();
+                            x = touch.clientX - rect.left;
+                            y = touch.clientY - rect.top;
+                        } else {
+                            // If it's a mouse event, get the position directly
+                            x = event.offsetX;
+                            y = event.offsetY;
+                        }
+                    
                         ctx.lineTo(x, y);
                         ctx.stroke();
                         ctx.beginPath();
                         ctx.moveTo(x, y);
                     }
-                
-                    // Start painting with mouse down
+                    
+                    // Start painting with mouse down or touch start
                     function startPainting(event) {
+                        event.preventDefault(); // Prevent scrolling when touching the canvas
                         painting = true;
                         saveCanvasState();
                         draw(event);
                     }
-                
-                    // Start painting with touch
-                    function startPaintingTouch(event) {
-                        event.preventDefault(); // Prevent screen scrolling
-                        painting = true;
-                        saveCanvasState();
-                        drawTouch(event);
-                    }
-                
-                    // Stop painting
+                    
+                    // Stop painting with mouse up or touch end
                     function stopPainting() {
                         painting = false;
                         ctx.beginPath();
@@ -655,10 +647,11 @@ def home():
                     canvas.addEventListener('mouseup', stopPainting);
                     canvas.addEventListener('mouseout', stopPainting);
                 
-                    // Touch events for mobile/tablet compatibility
-                    canvas.addEventListener('touchstart', startPaintingTouch, { passive: false });
-                    canvas.addEventListener('touchmove', drawTouch, { passive: false });
+                    // Event listeners for touch interactions
+                    canvas.addEventListener('touchstart', startPainting, { passive: false });
+                    canvas.addEventListener('touchmove', draw, { passive: false });
                     canvas.addEventListener('touchend', stopPainting);
+                    canvas.addEventListener('touchcancel', stopPainting);
                 
                     // Change color
                     function changeColor(color) {
