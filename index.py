@@ -218,7 +218,7 @@ def home():
     return render_template_string("""
     <html>
         <head>
-            <title>Mind Palette for kids!</title>
+            <title>Mind Palette for kids*</title>
             <style>
                 body {
                     font-family: 'Helvetica', sans-serif;
@@ -265,7 +265,7 @@ def home():
                 }
                 
                     progress {
-                        width: 430px;  /* Set width to match the drawing canvas */
+                        width: 350px;  
                         height: 10px;
                         margin-top: 10px;
                         color: #0057e7; /* Change progress bar color here */
@@ -490,11 +490,11 @@ def home():
         <body>
             <div class="container">
                 <div class="left">
-                <h1>Mind Palette for kids!</h1>
+                <h1>Mind Palette for kids*</h1>
                 <div id="question">{{ latest_question }}</div>
                 <progress value="{{ progress_value }}" max="100"></progress>  <!-- Progress bar here -->
                 <form onsubmit="return sendResponse();">
-                    <input type="text" id="response" autocomplete="off" style="width: 430px; margin-top: 15px;" value="" placeholder="Enter your response here..." />
+                    <input type="text" id="response" autocomplete="off" style="width: 350px; margin-top: 15px;" value="" placeholder="Enter your response here..." />
                     <input type="submit" value="Respond" class="button-style" />
                 </form>
                 <div class="canvas-container ">
@@ -514,7 +514,7 @@ def home():
                     <div class="brush" style="background-color: black;" onclick="changeColor('black')"></div>
                 </div>
                 <div style="margin-top: 10px;">
-                    Brush size: <input type="range" id="strokeSizeSlider" min="15" max="30" value="2" style="width: 200px;" >
+                    Brush size: <input type="range" id="strokeSizeSlider" min="10" max="30" value="2" style="width: 200px;" >
                     <button id="brushButton" class="tool-button" onclick="selectTool('brush')">Brush</button>
                     <button id="eraserButton" class="tool-button" onclick="selectTool('eraser')">Eraser</button>
                 </div>
