@@ -517,8 +517,8 @@ def home():
                     Brush size: <input type="range" id="strokeSizeSlider" min="10" max="30" value="2" style="width: 200px;" >
                     <button id="brushButton" class="tool-button" onclick="selectTool('brush')">Brush</button>
                     <button id="eraserButton" class="tool-button" onclick="selectTool('eraser')">Eraser</button>
+                    <button id="backButton" class="tool-button" onclick="undoLastAction()">Back</button> <!-- Move "Back" button here -->
                 </div>
-
 
 
                 <script>
