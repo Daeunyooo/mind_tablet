@@ -580,6 +580,7 @@ def home():
                         undoStack.push(imageData);
                     }
 
+
                     // Draw on the canvas
                     function draw(event) {
                         if (!painting) return;
@@ -590,15 +591,16 @@ def home():
                         ctx.beginPath();
                         ctx.moveTo(event.offsetX, event.offsetY);
                     }
-
+                    
                     // Draw with touch
                     function drawTouch(event) {
+                        event.preventDefault(); // Prevent screen scrolling
                         if (!painting) return;
                         const touch = event.touches[0];
                         const rect = canvas.getBoundingClientRect();
                         const x = touch.clientX - rect.left;
                         const y = touch.clientY - rect.top;
-                
+                    
                         ctx.lineWidth = document.getElementById('strokeSizeSlider').value;
                         ctx.lineCap = 'round';
                         ctx.lineTo(x, y);
@@ -616,17 +618,18 @@ def home():
 
                     // Start painting with touch
                     function startPaintingTouch(event) {
+                        event.preventDefault(); // Prevent screen scrolling
                         painting = true;
                         saveCanvasState();
                         drawTouch(event);
                     }
-
+                    
                     // Stop painting
                     function stopPainting() {
                         painting = false;
                         ctx.beginPath();
                     }
-
+                    
                     // Undo the last action
                     function undoLastAction() {
                         if (undoStack.length > 0) {
@@ -642,7 +645,7 @@ def home():
                             ctx.lineWidth = 20;  // Make the eraser bigger
                         } else {
                             ctx.globalCompositeOperation = 'source-over';
-                            ctx.strokeStyle = document.getElementById('currentColor').value;
+                            ctx.strokeStyle = currentColor;
                         }
                     }
 
@@ -653,14 +656,14 @@ def home():
                     canvas.addEventListener('mouseout', stopPainting);
 
                     // Touch events for mobile/tablet compatibility
-                    canvas.addEventListener('touchstart', startPaintingTouch, { passive: true });
-                    canvas.addEventListener('touchmove', drawTouch, { passive: true });
+                    canvas.addEventListener('touchstart', startPaintingTouch, { passive: false });
+                    canvas.addEventListener('touchmove', drawTouch, { passive: false });
                     canvas.addEventListener('touchend', stopPainting);
-
+                    
                     // Change color
                     function changeColor(color) {
+                        currentColor = color;
                         ctx.strokeStyle = color;
-                        document.getElementById('currentColor').value = color;
                     }
 
                     // Buttons for tool selection
