@@ -334,7 +334,8 @@ def home():
                     background-color: #f3f4f6;
                     border: 2px solid #cccccc;
                     border-radius: 4px;
-                    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><circle cx="12" cy="12" r="8" fill="black" fill-opacity="0.4" />stroke="gray" stroke-width="1"/></svg>') 12 12, crosshair;
+                    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><circle cx="12" cy="12" r="8" fill="black" fill-opacity="0.4" stroke="gray" stroke-width="1"/></svg>') 12 12, crosshair;
+                    touch-action: none; /* Prevent touch scrolling */
                 }
                 .brush {
                     width: 30px;
@@ -580,7 +581,6 @@ def home():
                         undoStack.push(imageData);
                     }
 
-
                     // Draw on the canvas
                     function draw(event) {
                         if (!painting) return;
@@ -591,7 +591,7 @@ def home():
                         ctx.beginPath();
                         ctx.moveTo(event.offsetX, event.offsetY);
                     }
-                    
+                
                     // Draw with touch
                     function drawTouch(event) {
                         event.preventDefault(); // Prevent screen scrolling
@@ -600,7 +600,7 @@ def home():
                         const rect = canvas.getBoundingClientRect();
                         const x = touch.clientX - rect.left;
                         const y = touch.clientY - rect.top;
-                    
+                
                         ctx.lineWidth = document.getElementById('strokeSizeSlider').value;
                         ctx.lineCap = 'round';
                         ctx.lineTo(x, y);
@@ -608,14 +608,14 @@ def home():
                         ctx.beginPath();
                         ctx.moveTo(x, y);
                     }
-
+                
                     // Start painting with mouse down
                     function startPainting(event) {
                         painting = true;
-                        draw(event);
                         saveCanvasState();
+                        draw(event);
                     }
-
+                
                     // Start painting with touch
                     function startPaintingTouch(event) {
                         event.preventDefault(); // Prevent screen scrolling
@@ -623,7 +623,7 @@ def home():
                         saveCanvasState();
                         drawTouch(event);
                     }
-                    
+                
                     // Stop painting
                     function stopPainting() {
                         painting = false;
@@ -654,12 +654,12 @@ def home():
                     canvas.addEventListener('mousemove', draw);
                     canvas.addEventListener('mouseup', stopPainting);
                     canvas.addEventListener('mouseout', stopPainting);
-
+                
                     // Touch events for mobile/tablet compatibility
                     canvas.addEventListener('touchstart', startPaintingTouch, { passive: false });
                     canvas.addEventListener('touchmove', drawTouch, { passive: false });
                     canvas.addEventListener('touchend', stopPainting);
-                    
+                
                     // Change color
                     function changeColor(color) {
                         currentColor = color;
