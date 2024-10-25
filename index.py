@@ -567,11 +567,12 @@ def home():
                     document.getElementById('eraserButton').addEventListener('click', () => selectTool('eraser'));
                     document.getElementById('backButton').addEventListener('click', undoLastAction);
 
-                    
+
                     const canvas = document.getElementById('drawingCanvas');
                     const ctx = canvas.getContext('2d');
                     let painting = false;
-                    let undoStack = [];  // Stack to keep track of canvas states for undo
+                    let undoStack = [];
+                    let currentColor = '#000000'; // Default black
 
                     // Save the current state of the canvas
                     function saveCanvasState() {
@@ -590,11 +591,34 @@ def home():
                         ctx.moveTo(event.offsetX, event.offsetY);
                     }
 
+                    // Draw with touch
+                    function drawTouch(event) {
+                        if (!painting) return;
+                        const touch = event.touches[0];
+                        const rect = canvas.getBoundingClientRect();
+                        const x = touch.clientX - rect.left;
+                        const y = touch.clientY - rect.top;
+                
+                        ctx.lineWidth = document.getElementById('strokeSizeSlider').value;
+                        ctx.lineCap = 'round';
+                        ctx.lineTo(x, y);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                    }
+
                     // Start painting with mouse down
                     function startPainting(event) {
                         painting = true;
                         draw(event);
                         saveCanvasState();
+                    }
+
+                    // Start painting with touch
+                    function startPaintingTouch(event) {
+                        painting = true;
+                        saveCanvasState();
+                        drawTouch(event);
                     }
 
                     // Stop painting
@@ -627,6 +651,11 @@ def home():
                     canvas.addEventListener('mousemove', draw);
                     canvas.addEventListener('mouseup', stopPainting);
                     canvas.addEventListener('mouseout', stopPainting);
+
+                    // Touch events for mobile/tablet compatibility
+                    canvas.addEventListener('touchstart', startPaintingTouch, { passive: true });
+                    canvas.addEventListener('touchmove', drawTouch, { passive: true });
+                    canvas.addEventListener('touchend', stopPainting);
 
                     // Change color
                     function changeColor(color) {
