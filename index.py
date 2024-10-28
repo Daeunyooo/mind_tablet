@@ -73,13 +73,13 @@ def generate_prompt(description, colors=None):
         prompt = (
             f"Create a purely visual artistic oil painting drawing using the colors {color_description}, "
             f"that reimagines '{description}' in a positive manner. For example, transforming a gloomy cloud "
-            f"into a scene with a rainbow. The image must focus entirely on visual elements without any text, "
+            f"into a fantastic scene with a rainbow or stars or sunshines. The image must focus entirely on visual elements without any text, "
             f"letters, or numbers."
         )
     else:
         prompt = (
             f"Create a purely visual artistic oil painting drawing that reimagines '{description}' in a positive manner. "
-            f"For example, transforming a gloomy cloud into a scene with a rainbow. The image must focus entirely "
+            f"For example, transforming a gloomy cloud into a fantastic scene with a rainbow or stars or sunshines. The image must focus entirely "
             f"on visual elements without any text, letters, or numbers."
         )
     return prompt
@@ -88,13 +88,18 @@ def generate_reappraisal_text(description):
     try:
         response = openai.Completion.create(
             engine="gpt-3.5-turbo-instruct",
-            prompt=f"Generate a short positive cognitive reappraisal advice for a child's description, less than three sentences: {description}",
+            prompt=(
+                f"A child has described a feeling in this way: '{description}'. "
+                f"Please offer a single piece of positive reappraisal advice in response, "
+                f"beginning with a new, complete sentence that helps the child view the emotion in a brighter, hopeful way. "
+                f"Keep the language simple and friendly, and focus on encouragement and optimism."
+            ),
             max_tokens=80
         )
         if 'choices' in response and len(response.choices) > 0:
             return response.choices[0].text.strip()
         else:
-            return "Failed to generate meaningful output. Please refine the prompt."
+            return "Could not generate a response. Please try again."
     except Exception as e:
         print(f"Error generating reappraisal text: {str(e)}")
         return "Could not generate reappraisal text."
@@ -136,7 +141,7 @@ def generate_art_therapy_question(api_key, question_number, session_history):
         "Based on the previous responses, generate a short question that explores the context, such as asking what triggered this emotion or describing the situation or thought that led to these feelings. Users are kids, so please use easy and friendly expressions.",
         "Based on the previous responses, generate a short question that asks the user to describe and visualize their emotion as an 'abstract shape or symbol' to create their own metaphor for their mind. Users are kids, so please use easy and friendly expressions, and provide some metaphors or examples.",
         "Based on the previous responses, generate a short question that asks the user to describe and visualize their emotions as a 'texture' to create their own metaphor for their mind. Users are kids, so please use easy and friendly expressions, and provide some metaphors or examples.",
-        "Based on the previous responses, provide personalized cognitive reappraisal advice to help think about the situation that user described in the previous response in a more positive way. Or, if user's previous response was already positive, please assist user to think about the good things they might learn from this experience. Please incorporating a playful and engaging approach consistent with CBT theory. Make sure the advice is directly relevant to the emotions and situations described by the child, using examples or activities that are fun and easy for kids to understand. Also, make this less than three sentences."
+        "Based on the previous responses, provide a summary of user's response. Then, provide a personalized cognitive reappraisal advice to help think about the situation that user described in the previous response in a more positive way. Or, if user's previous response was already positive, please assist user to think about the good things they might learn from this experience. Please incorporating a playful and engaging approach consistent with CBT theory. Make sure the advice is directly relevant to the emotions and situations described by the child, using examples or activities that are fun and easy for kids to understand. Also, make this less than four sentences."
     ]
     
     user_responses = " ".join([resp for who, resp in session_history if who == 'You'])
@@ -218,7 +223,7 @@ def home():
     return render_template_string("""
     <html>
         <head>
-            <title>Mind Palette for kids*</title>
+            <title>Mind Palette for kids (tablet)</title>
             <style>
                 body {
                     font-family: 'Helvetica', sans-serif;
@@ -490,7 +495,7 @@ def home():
         <body>
             <div class="container">
                 <div class="left">
-                <h1>Mind Palette for kids*</h1>
+                <h1>Mind Palette for kids (tablet)</h1>
                 <div id="question">{{ latest_question }}</div>
                 <progress value="{{ progress_value }}" max="100"></progress>  <!-- Progress bar here -->
                 <form onsubmit="return sendResponse();">
