@@ -90,11 +90,11 @@ def generate_reappraisal_text(description):
             engine="gpt-3.5-turbo-instruct",
             prompt=(
                 f"A child has described a feeling in this way: '{description}'. "
-                f"Please offer a single piece of positive reappraisal advice in response, "
+                f"Please offer a brief positive cognitive reappraisal advice in response based on CBT, "
                 f"beginning with a new, complete sentence that helps the child view the emotion in a brighter, hopeful way. "
                 f"Keep the language simple and friendly, and focus on encouragement and optimism."
             ),
-            max_tokens=80
+            max_tokens=100
         )
         if 'choices' in response and len(response.choices) > 0:
             return response.choices[0].text.strip()
@@ -223,7 +223,7 @@ def home():
     return render_template_string("""
     <html>
         <head>
-            <title>Mind Palette for kids (tablet)</title>
+            <title>Mind Palette!</title>
             <style>
                 body {
                     font-family: 'Helvetica', sans-serif;
@@ -495,7 +495,7 @@ def home():
         <body>
             <div class="container">
                 <div class="left">
-                <h1>Mind Palette for kids (tablet)</h1>
+                <h1>Mind Palette! (tablet)</h1>
                 <div id="question">{{ latest_question }}</div>
                 <progress value="{{ progress_value }}" max="100"></progress>  <!-- Progress bar here -->
                 <form onsubmit="return sendResponse();">
