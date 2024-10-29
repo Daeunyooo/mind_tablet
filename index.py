@@ -495,7 +495,7 @@ def home():
         <body>
             <div class="container">
                 <div class="left">
-                <h1>Mind Palette! (tablet)</h1>
+                <h1>Mind Palette!</h1>
                 <div id="question">{{ latest_question }}</div>
                 <progress value="{{ progress_value }}" max="100"></progress>  <!-- Progress bar here -->
                 <form onsubmit="return sendResponse();">
